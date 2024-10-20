@@ -1,7 +1,15 @@
 import os
 import streamlit as st
 import yt_dlp
-import ffmpeg
+import subprocess
+
+# Function to ensure ffmpeg is installed and accessible
+def check_ffmpeg():
+    try:
+        subprocess.run(['ffmpeg', '-version'], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        return True
+    except subprocess.CalledProcessError:
+        return False
 
 # Function to download only audio using yt-dlp
 def download_audio(url, output_path):
@@ -55,6 +63,11 @@ def download_video_with_audio(url, output_path):
 def main():
     st.title("YouTube Video Downloader")
 
+    # Check if ffmpeg is installed
+    if not check_ffmpeg():
+        st.error("FFmpeg is not installed or not accessible. Please install FFmpeg to use this tool.")
+        return
+
     urls = st.text_area("Enter YouTube video URLs (one per line)").splitlines()
     option = st.radio("Select download option", ('Audio', 'Video', 'Both (Video + Audio)'))
     output_path = "./downloads"
@@ -65,7 +78,8 @@ def main():
     if st.button("Download"):
         if urls:
             for url in urls:
-                if url.strip():  # Check if URL is not empty
+                url = url.strip()  # Strip any leading/trailing whitespace
+                if url:  # Check if URL is not empty
                     try:
                         st.write(f"Processing: {url}")
                         
