@@ -13,6 +13,9 @@ def download_audio(url, output_path):
             'preferredquality': '192',
         }],
         'outtmpl': os.path.join(output_path, '%(title)s.%(ext)s'),
+        'http_headers': {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0'
+        }
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
@@ -24,6 +27,9 @@ def download_video(url, output_path):
     ydl_opts = {
         'format': 'bestvideo[ext=mp4]',
         'outtmpl': os.path.join(output_path, '%(title)s.%(ext)s'),
+        'http_headers': {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0'
+        }
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
@@ -36,6 +42,9 @@ def download_video_with_audio(url, output_path):
         'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best',
         'outtmpl': os.path.join(output_path, '%(title)s.%(ext)s'),
         'merge_output_format': 'mp4',
+        'http_headers': {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0'
+        }
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
@@ -58,7 +67,6 @@ def main():
             for url in urls:
                 if url.strip():  # Check if URL is not empty
                     try:
-                        # Display current URL being processed
                         st.write(f"Processing: {url}")
                         
                         if option == 'Audio':
